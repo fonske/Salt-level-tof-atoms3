@@ -1,0 +1,33 @@
+#-----------
+#AUTOMATIONS
+#-----------
+automation:
+  #------------------------------------------------------------------
+  # Automatisering opties: alarm zoutmelding. 
+  # vul je eigen mobile_app_iphone_van_xxx in. (als voorbeeld)            
+  #------------------------------------------------------------------
+    - id: salt_level_alarm_notify
+    alias: Zoutniveau alarm melding
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.zout_bijvullen
+      to: ja
+    condition:
+    - condition: time
+      after: 07:30:00
+      before: '22:00:00'
+    action:
+    - service: notify.mobile_app_iphone_van_a_c_a
+      data:
+        title: Let op!
+        message: Zout niveau van ontharder is laag! Vandaag gaan bijvullen!
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    initial_state: 'true'
+    mode: single
+  ##################################################
