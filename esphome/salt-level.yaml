@@ -1,4 +1,3 @@
-#https://docs.m5stack.com/en/core/AtomS3%20Lite
 substitutions:
   device_description: "Esphome component for Salt level detection"
   timezone: "Europe/Amsterdam"
