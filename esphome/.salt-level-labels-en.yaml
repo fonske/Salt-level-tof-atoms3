@@ -17,5 +17,5 @@ substitutions:
   salt_uptime: Uptime
   hours: hour
   days: days
-  salt_level_yes: "yes"
-  salt_level_no: "no"
+  salt_fill_yes: "yes"
+  salt_fill_no: "no"

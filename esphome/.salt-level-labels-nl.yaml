@@ -17,5 +17,5 @@ substitutions:
   salt_uptime: Uptime
   hours: uur
   days: dagen
-  salt_level_yes: ja
-  salt_level_no: nee
+  salt_fill_yes: ja
+  salt_fill_no: nee

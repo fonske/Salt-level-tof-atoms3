@@ -159,23 +159,23 @@ sensor:
 
 # Diagnostics wifi and uptime      
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    id: salt_level_wifi_signal_db
+    id: salt_wifi_signal_db
     name: ${salt_wifi_signal_db}
     update_interval: 60s
     entity_category: diagnostic
 
   - platform: copy # Reports the WiFi signal strength in %
     source_id: salt_level_wifi_signal_db
-    id: salt_level_wifi_signal_db_percent
-    name: ${salt_level_wifi_signal_db_percent}
+    id: salt_wifi_signal_db_percent
+    name: ${salt_wifi_signal_db_percent}
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
     entity_category: diagnostic
 
   - platform: uptime
-    id: salt_level_uptime
-    name: ${salt_level_uptime}
+    id: salt_uptime
+    name: ${salt_uptime}
     unit_of_measurement: ${days}
     update_interval: 3600s
     accuracy_decimals: 1
@@ -193,7 +193,7 @@ text_sensor:
   # Expose WiFi information as sensors.
   - platform: wifi_info
     ip_address:
-      name: ${salt_level_ip}
+      name: ${salt_ip}
       icon: mdi:ip-network
 
   # Textsensor "Fill Salt" yes or no.
@@ -336,7 +336,7 @@ number:
             id: salt_fill_salt
             state: !lambda |-
               if (id(salt_height).state < id(salt_height_fill).state) {
-                return {"${salt_level_yes}"};
+                return {"${salt_fill_yes}"};
               } else {
-                return {"${salt_level_no}"};
+                return {"${salt_fill_no}"};
               }
