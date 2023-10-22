@@ -8,8 +8,8 @@ packages:
     url: https://github.com/fonske/Salt-level-tof-atoms3
     ref: main
     files: 
-      - esphome/.salt-level-labels-en.yaml
-      # - esphome/.salt-level-labels-nl.yaml
+#      - esphome/.salt-level-labels-en.yaml
+      - esphome/.salt-level-labels-nl.yaml
 
 esphome:
   name: ${name}
