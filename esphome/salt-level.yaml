@@ -165,7 +165,7 @@ sensor:
     entity_category: diagnostic
 
   - platform: copy # Reports the WiFi signal strength in %
-    source_id: salt_level_wifi_signal_db
+    source_id: salt_wifi_signal_db
     id: salt_wifi_signal_db_percent
     name: ${salt_wifi_signal_db_percent}
     filters:
