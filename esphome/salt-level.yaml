@@ -46,6 +46,7 @@ logger:
 
 # Enable Home Assistant API
 api:
+  reboot_timeout: 0s
  
 ota:
 
@@ -106,9 +107,9 @@ sensor:
             id: salt_fill_salt
             state: !lambda |-
               if (id(salt_height).state < id(salt_height_fill).state) {
-                return {"${fill_yes}"};
+                return {"${salt_fill_yes}"};
               } else {
-                return {"${fill_no}"};
+                return {"${salt_fill_no}"};
               }
     
       
