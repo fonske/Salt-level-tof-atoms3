@@ -19,3 +19,34 @@ substitutions:
   days: dagen
   salt_fill_yes: ja
   salt_fill_no: nee
+
+text_sensor:
+  # Expose last regeneration information as sensor
+  - platform: template
+    name: ${salt_fill_last}
+    id: salt_fill_last
+    icon: mdi:clock-start
+    update_interval: never
+    lambda: |-
+      return id(fill_last);
+    filters:   
+      - substitute:
+        - "Jan -> jan"
+        - "Feb -> feb"
+        - "Mar -> mar"
+        - "Apr -> apr"
+        - "Mai -> mei"
+        - "Jun -> jun"
+        - "Jul -> jul"
+        - "Aug -> aug"
+        - "Sep -> sep"
+        - "Okt -> okt"
+        - "Nov -> nov"
+        - "Dec -> dec"
+        - "Mon -> maa"
+        - "Tue -> din"
+        - "Wed -> woe"
+        - "Thu -> don"
+        - "Fri -> vri"
+        - "Sat -> zat"
+        - "Sun -> zon" 
