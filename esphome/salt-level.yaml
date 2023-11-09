@@ -2,13 +2,22 @@ substitutions:
   device_description: "Esphome component for Salt level detection"
   timezone: "Europe/Amsterdam"
 
+#packages:
+#  remote_package:
+#    url: https://github.com/fonske/Salt-level-tof-atoms3
+#    ref: main
+#    files: 
+#      - esphome/labels/.salt-level-labels-en.yaml
+#      - esphome/labels/.salt-level-labels-nl.yaml
+
+## for developing/testing, uncomment local includes and comment out remote_package part.
 packages:
-  remote_package:
-    url: https://github.com/fonske/Salt-level-tof-atoms3
-    ref: main
-    files: 
-#      - esphome/.salt-level-labels-en.yaml
-      - esphome/.salt-level-labels-nl.yaml
+  substitutions: !include labels/.salt-level-labels-nl.yaml
+#  substitutions: !include labels/.salt-level-labels-en.yaml
+#  device_base1:  !include .procon.base.yaml
+#  device_base2:  !include boards/board-esp32.yaml
+#  device_base2:  !include boards/board-esp32S3.yaml
+#  device_base2:  !include boards/board-m5stack-atom.yaml
 
 esphome:
   name: ${name}
@@ -57,6 +66,22 @@ i2c:
   - id: bus_a
     sda: GPIO2
     scl: GPIO1
+
+# Define a global variable for last regeneration time
+globals:
+  - id: fill_last
+    type: std::string
+    restore_value: yes
+    initial_value: '"Never"'
+
+script:
+###  On reboot or powerloss of the esp, set the time left, last regeneration time, and capacity counters
+  - id: on_boot
+    then:
+      - text_sensor.template.publish:
+            id: salt_fill_last
+            state: !lambda |-
+              return id(fill_last);
 
 sensor:
   - platform: vl53l0x
@@ -126,6 +151,42 @@ sensor:
         if (x >= 100) return 100.0;
         else if (x <= 0.0) return 0.0;
         else return x;
+    on_value_range:
+      - above: 0.0
+        below: 25.0
+        then:
+          - light.turn_on:
+              id: led
+              brightness: !lambda |-
+                // output value must be in range 0 - 1.0
+                return id(led_brightness).state / 100.0;
+              red: 100%
+              green: 0%
+              blue: 0%
+
+      - above: 26.0
+        below: 75.0
+        then:
+          - light.turn_on:
+              id: led
+              brightness: !lambda |-
+                // output value must be in range 0 - 1.0
+                return id(led_brightness).state / 100.0;
+              red: 0%
+              green: 0%
+              blue: 100%          
+
+      - above: 76.0
+        below: 100.0
+        then:
+          - light.turn_on:
+              id: led
+              brightness: !lambda |-
+                // output value must be in range 0 - 1.0
+                return id(led_brightness).state / 100.0;
+              red: 0%
+              green: 100%
+              blue: 0%
 
   # Saltlevel animation picture on dashboard  
   - platform: copy
@@ -204,47 +265,24 @@ text_sensor:
     icon: mdi:basket-fill
     update_interval: never
 
-# Output that blinks the LED
-output:
-  - platform: template
-    id: status_output
-    type: binary
-    write_action:
-    - if:
-        condition:
-          lambda: return (state);
-        then:
-          - light.turn_on:
-              id: led
-              brightness: 70%
-              red: 100%
-              green: 0%
-              blue: 0%
-        else:
-          - light.turn_off: led
-
 light:
-  # Enable status LED
-#  - platform: status_led
-#    output: status_output
-#    name: "Status Led"
-#    internal: True
-
-  #G35=RGB WS2812C-2020
+#G35=RGB WS2812C-2020
   - platform: esp32_rmt_led_strip
+    name: Led
+    id: led
     rgb_order: GRB
     pin: 35
     num_leds: 4
+#    brightness: 0.7
     # RMT 0 channels will be occupied by IR
     rmt_channel: 1
     chipset: ws2812
-    id: led
-    name: "Led"
 
 #G41=Button
 binary_sensor:
   - platform: gpio
     name: Button
+    id: button
     pin:
       number: GPIO41
       inverted: true
@@ -253,9 +291,31 @@ binary_sensor:
         pullup: true
     filters:
       - delayed_off: 10ms
+    # Toggle the switch when the pushbutton is pressed
     on_press:
       then:
-        - logger.log: Button Pressed
+        - switch.toggle: salt_fill_switch
+        - text_sensor.template.publish:
+            id: salt_fill_last
+            state: !lambda |-
+              char str[32];
+              time_t currTime = id(sntp_time).now().timestamp;
+              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+              id(fill_last) = str;
+              return  { str };
+
+switch:
+  - platform: template
+    id: salt_fill_switch
+    name: salt_fill_switch
+    optimistic: true
+    lambda: return id(salt_fill_switch).state;
+    turn_on_action:
+      - light.turn_on:
+          id: led
+    turn_off_action:
+      - light.turn_off: 
+          id: led
 
 # imput numbers as boxes for setting the dimensions of the tank and level alarm.
 number:
@@ -341,3 +401,29 @@ number:
               } else {
                 return {"${salt_fill_no}"};
               }
+
+    ## Set led brightness
+  - platform: template
+    id: led_brightness
+    name: led_brightness
+    icon: mdi:toggle-switch-variant
+    optimistic: true
+    mode: slider
+    step: 10
+    entity_category: config
+    min_value: 0
+    max_value: 100
+    initial_value: 70
+    restore_value: yes
+    unit_of_measurement: "%"
+    on_value:
+      then:
+        - if:
+            condition:
+              - light.is_on: led
+            then:
+            - light.turn_on:
+                id: led
+                brightness: !lambda |-
+                  // output value must be in range 0 - 1.0
+                  return id(led_brightness).state / 100.0;
