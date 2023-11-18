@@ -269,13 +269,6 @@ text_sensor:
     icon: mdi:basket-fill
     update_interval: never
 
-  # Textsensor "Fill Salt" yes or no.
-  - platform: template
-    name: ${salt_fill_last}
-    id: salt_fill_last
-    icon: mdi:basket-fill
-    update_interval: never
-
 light:
 #G35=RGB WS2812C-2020
   - platform: esp32_rmt_led_strip
