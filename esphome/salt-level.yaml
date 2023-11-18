@@ -15,10 +15,6 @@ packages:
 #packages:
 #  substitutions: !include labels/.salt-level-labels-nl.yaml
 #  substitutions: !include labels/.salt-level-labels-en.yaml
-#  device_base1:  !include .procon.base.yaml
-#  device_base2:  !include boards/board-esp32.yaml
-#  device_base2:  !include boards/board-esp32S3.yaml
-#  device_base2:  !include boards/board-m5stack-atom.yaml
 
 esphome:
   name: ${name}
