@@ -8,6 +8,10 @@ Kopieer daar alle plaatjes in van [/www/images](../www/images)
 Voorbeeld dashboard: 
 ![Example](Printscreen_NL.jpg)
 
+Het dashboard zelf kan geplaatst worden via home assistant drie puntjes - dashboard bewerken - ruwe configuratie editor
+Tekst uit [/lovelace_menu_nl.yaml](../home_assistant/lovelace_menu_nl.yaml) daar aan toevoegen en opslaan.
+U heeft nu een extra menu Zoutniveau
+
 ## Automations
 [automation_saltalarm_nl.yaml](../home_assistant/automation_saltalarm_nl.yaml) samenvoegen met automations.yaml (let op inspringingen) of beter:
 
@@ -23,8 +27,8 @@ homeassistant:
 Dan directory /packages aanmaken in /config en daar de automation_saltalarm_nl.yaml in kopieren
 HA opnieuw starten
 
-## Configuratie
-### Clack.yaml
+## Uitleg werking
+
 In clack.yaml moeten de tijden nog aangepast worden aan je eigen tijden (timer) voor de simulatie van het regenereren in HA.
 Even met een stopwatch ofzo, nadat de regeneratie handmatig gestart is. Elke keer dat de inwendige schuif beweegt is een stap (zie ook op het display vd clack)
 Het kan zijn, dat je clack 5 cyclussen heeft ipv 4. Backwash, brine, backwash, rinse, fill. In de code is de 2e backwash eruit gehaald, wat het meest gangbaar is, voor de meeste ontharders. Anders kan je een timer toevoegen en de code wat aanpassen in clack.yaml
