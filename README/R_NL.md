@@ -36,8 +36,11 @@ Zout bijvullen afstand is de afstand vanaf wanneer er een alarm (automation) zal
 ### LED
 De LED op de AtomS3 lite is in of uit te schakelen. Helderheid op 0 is ook LED uit.
 De LED verspringt van kleur bij:
+
 0-25% zoutniveau in de tank = ROOD
+
 25-75% zoutniveau in de tank = BLAUW
+
 75-100% zoutniveau in de tank = GROEN
 
 ### DRUK KNOP
