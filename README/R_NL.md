@@ -1,8 +1,9 @@
 # Zoutniveau meting met Atoms3 lite en TOF sensor
 
 ## Lovelace menu
-Om het lovelace menu volledig te benutten dient er een map /www/images aangemaakt te worden in je home assistant directory
-En kopieer daar alle plaatjes in van
+Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
+dient er een map /www/images aangemaakt te worden in je home assistant directory.
+Kopieer daar alle plaatjes in van [www/images](../clack.yaml)
 de volgende repositories geinstalleerd te worden (verkennen en downloaden)
 
 Voorbeeld dahsboard: 
