@@ -4,9 +4,8 @@
 Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
 dient er een map /www/images aangemaakt te worden in je home assistant directory.
 Kopieer daar alle plaatjes in van [/www/images](../www/images)
-de volgende repositories geinstalleerd te worden (verkennen en downloaden)
 
-Voorbeeld dahsboard: 
+Voorbeeld dashboard: 
 ![Example](Printscreen_NL.jpg)
 
 ## Automations en sensor(s)
