@@ -9,10 +9,10 @@ Voorbeeld dashboard:
 ![Example](Printscreen_NL.jpg)
 
 ## Automations
-[automation_saltalarm_nl.yaml](../automation_saltalarm_nl.yaml) samenvoegen met automations.yaml (let op inspringingen) of beter:
+[automation_saltalarm_nl.yaml](../home_assistant/automation_saltalarm_nl.yaml) samenvoegen met automations.yaml (let op inspringingen) of beter:
 
 ### Bestand op eigen lokatie: 
-[automation_saltalarm_nll](../automation_saltalarm_nl) op een eigen lokatie zetten:
+[automation_saltalarm_nl](../home_assistant/automation_saltalarm_nl) op een eigen lokatie zetten:
 configuration.yaml aanpassen naar:
 
 ```yml
