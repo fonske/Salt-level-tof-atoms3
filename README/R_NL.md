@@ -1,16 +1,12 @@
-# Clack - Lezer
+# Zoutniveau meting met Atoms3 lite en TOF sensor
 
 ## Lovelace menu
-Om het lovelace menu volledig te benutten dient via hacs (frontend)
+Om het lovelace menu volledig te benutten dient er een map /www/images aangemaakt te worden in je home assistant directory
+En kopieer daar alle plaatjes in van
 de volgende repositories geinstalleerd te worden (verkennen en downloaden)
 
 Voorbeeld dahsboard: 
 ![Example](Printscreen_NL.jpg)
-
-* stack-in-card
-* multiple-entity-row
-* bar-card
-* apexcharts  (staafdiagram)
 
 ## Automations en sensor(s)
 [clack.yaml](../clack.yaml) samenvoegen met configuration.yaml of beter:
