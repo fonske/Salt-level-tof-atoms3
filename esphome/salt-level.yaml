@@ -1,18 +1,19 @@
 substitutions:
-  device_description: "Esphome component for Salt level detection"
+  device_description: "Salt level detection with M5Stack AtomS3 lite and TOF sensor"
   timezone: "Europe/Amsterdam"
 
-#packages:
-#  remote_package:
-#    url: https://github.com/fonske/Salt-level-tof-atoms3
-#    ref: main
-#    files: 
+## choose between languages. NL or EN are available. Uncomment and comment out the correct label file.
+packages:
+  remote_package:
+    url: https://github.com/fonske/Salt-level-tof-atoms3
+    ref: main
+    files: 
 #      - esphome/labels/.salt-level-labels-en.yaml
-#      - esphome/labels/.salt-level-labels-nl.yaml
+      - esphome/labels/.salt-level-labels-nl.yaml
 
 ## for developing/testing, uncomment local includes and comment out remote_package part.
-packages:
-  substitutions: !include labels/.salt-level-labels-nl.yaml
+#packages:
+#  substitutions: !include labels/.salt-level-labels-nl.yaml
 #  substitutions: !include labels/.salt-level-labels-en.yaml
 #  device_base1:  !include .procon.base.yaml
 #  device_base2:  !include boards/board-esp32.yaml
@@ -38,7 +39,6 @@ wifi:
   ap:
     ssid: ${name}
     password: "configesp"
-    ap_timeout: 15s
  
 captive_portal:
 
@@ -72,10 +72,10 @@ globals:
   - id: fill_last
     type: std::string
     restore_value: yes
-    initial_value: '"Never"'
+    initial_value: '"${never}"'
 
 script:
-###  On reboot or powerloss of the esp, set the time left, last regeneration time, and capacity counters
+###  On reboot or powerloss of the esp, set the fill last date and time
   - id: on_boot
     then:
       - text_sensor.template.publish:
@@ -93,20 +93,26 @@ sensor:
     filters:
       - filter_out: nan
       - lambda: return x*100;
-#      - median:
-#          window_size: 15
-#          send_every: 7
-#          send_first_at: 1
- #     - delta: 0.5
+      ### comment with # if you want a direct reading:
+      - median:
+          window_size: 5
+          send_every: 3
+          send_first_at: 1
+      - delta: 0.5
+      ###
       - clamp:
           min_value: 0.0
           max_value: 160.0
     on_value:
       then:
-        - sensor.template.publish:
-            id: salt_distance
-            state: !lambda |-
-              return id(distance_cm).state;
+        - if:
+            condition:
+              - switch.is_on: salt_fill_switch
+            then:
+            - sensor.template.publish:
+                id: salt_distance
+                state: !lambda |-
+                  return id(distance_cm).state;
 
 # ultrasonic distance sensor.
   - platform: template
@@ -115,6 +121,7 @@ sensor:
     unit_of_measurement: "cm"
     accuracy_decimals: 1
     icon: "mdi:arrow-expand-vertical" 
+    update_interval: never
     on_value:
       then:
         - sensor.template.publish:
@@ -225,6 +232,7 @@ sensor:
     name: ${salt_wifi_signal_db}
     update_interval: 60s
     entity_category: diagnostic
+    internal: True
 
   - platform: copy # Reports the WiFi signal strength in %
     source_id: salt_wifi_signal_db
@@ -265,6 +273,13 @@ text_sensor:
     icon: mdi:basket-fill
     update_interval: never
 
+  # Textsensor "Fill Salt" yes or no.
+  - platform: template
+    name: ${salt_fill_last}
+    id: salt_fill_last
+    icon: mdi:basket-fill
+    update_interval: never
+
 light:
 #G35=RGB WS2812C-2020
   - platform: esp32_rmt_led_strip
@@ -277,6 +292,8 @@ light:
     # RMT 0 channels will be occupied by IR
     rmt_channel: 1
     chipset: ws2812
+    restore_mode: ALWAYS_OFF
+#    internal: True
 
 #G41=Button
 binary_sensor:
@@ -289,32 +306,42 @@ binary_sensor:
       mode:
         input: true
         pullup: true
+    internal: True
     filters:
       - delayed_off: 10ms
-    # Toggle the switch when the pushbutton is pressed
-    on_press:
-      then:
-        - switch.toggle: salt_fill_switch
-        - text_sensor.template.publish:
-            id: salt_fill_last
-            state: !lambda |-
-              char str[32];
-              time_t currTime = id(sntp_time).now().timestamp;
-              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
-              id(fill_last) = str;
-              return  { str };
+    on_multi_click:
+        - timing:
+             - ON for at most 2s
+             - OFF for at least 0.2s
+          then:
+            - switch.toggle: salt_fill_switch
+        - timing:
+             - ON for at least 3s
+          then:
+              - text_sensor.template.publish:
+                  id: salt_fill_last
+                  state: !lambda |-
+                    char str[32];
+                    time_t currTime = id(sntp_time).now().timestamp;
+                    strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+                    id(fill_last) = str;
+                    return  { str };
 
 switch:
   - platform: template
     id: salt_fill_switch
-    name: salt_fill_switch
-    optimistic: true
+    name: ${salt_level_measure}
+    optimistic: True
+    restore_mode: RESTORE_DEFAULT_ON 
     lambda: return id(salt_fill_switch).state;
     turn_on_action:
       - light.turn_on:
           id: led
+          brightness: !lambda |-
+            // output value must be in range 0 - 1.0
+            return id(led_brightness).state / 100.0;
     turn_off_action:
-      - light.turn_off: 
+      - light.turn_off:
           id: led
 
 # imput numbers as boxes for setting the dimensions of the tank and level alarm.
@@ -405,7 +432,7 @@ number:
     ## Set led brightness
   - platform: template
     id: led_brightness
-    name: led_brightness
+    name: ${led_brightness}
     icon: mdi:toggle-switch-variant
     optimistic: true
     mode: slider
@@ -413,7 +440,7 @@ number:
     entity_category: config
     min_value: 0
     max_value: 100
-    initial_value: 70
+    initial_value: 50
     restore_value: yes
     unit_of_measurement: "%"
     on_value:
