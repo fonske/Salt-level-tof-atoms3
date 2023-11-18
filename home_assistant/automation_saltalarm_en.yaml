@@ -3,15 +3,15 @@
 #-----------
 automation:
   #------------------------------------------------------------------
-  # Automatisering opties: alarm zoutmelding. 
-  # vul je eigen mobile_app_iphone_van_xxx in. (als voorbeeld)            
+  # Automations option: Salt alarm notification. 
+  # Fill in your own mobile_app_iphone_van_xxx in. (as an example)            
   #------------------------------------------------------------------
     - id: salt_level_alarm_notify
     alias: Salt level alarm notify
     description: ''
     trigger:
     - platform: state
-      entity_id: sensor.fill_salt
+      entity_id: sensor.saltlevel_fill_salt
       to: "yes"
     condition:
     - condition: time

@@ -3,27 +3,38 @@ views:
     path: Zoutniveau
     badges: []
     cards:
-      - type: entities
-        entities:
-          - entity: sensor.zoutniveau_afstand
-            name: Afstand
-          - entity: sensor.zoutniveau_hoogte
-            name: Hoogte
-          - entity: sensor.zoutniveau_procent
-            name: Procent
-          - entity: sensor.zout_bijvullen
-      - type: entities
-        entities:
-          - entity: number.min_afstand_zout
-          - entity: number.max_afstand_zout
-          - entity: number.zout_bijvullen_afstand
-          - entity: sensor.versie
-          - entity: sensor.zoutniveau_ip
-          - entity: sensor.wifi_signal
-          - entity: sensor.wifi_signal_db
-        title: Instellingen
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.zoutniveau_procent
+                name: Procent
+              - entity: sensor.zoutniveau_hoogte
+                name: Hoogte
+              - entity: sensor.zoutniveau_afstand
+                name: Afstand
+              - entity: sensor.zoutniveau_bijvullen
+                name: Bijvullen
+              - entity: sensor.zoutniveau_bijgevuld_op
+                name: Bijgevuld op
+            title: Zoutniveau
+          - type: entities
+            entities:
+              - entity: light.zoutniveau_led
+                name: Led
+              - entity: switch.zoutniveau_meting
+                name: Meting
+              - entity: number.zoutniveau_led_helderheid
+                name: Led helderheid
+              - entity: number.zoutniveau_max_afstand_zout
+                name: Max afstand zout
+              - entity: number.zoutniveau_min_afstand_zout
+                name: Min afstand zout
+              - entity: number.zoutniveau_zout_bijvullen_afstand
+                name: Zout bijvullen afstand
+            show_header_toggle: false
       - elements:
-          - entity: sensor.salt_level
+          - entity: sensor.zoutniveau_animatie
             image: local/images/softener.png
             state_image:
               '0': local/images/softener0.png
@@ -43,3 +54,13 @@ views:
         image: local/images/softener.png
         panel: true
         type: picture-elements
+      - type: entities
+        entities:
+          - entity: sensor.zoutniveau_uptime
+            name: Uptime
+          - entity: sensor.zoutniveau_versie
+            name: Versie
+          - entity: sensor.zoutniveau_wifi_signaal
+            name: WiFi Signaal
+          - entity: sensor.zoutniveau_ip
+            name: Zoutniveau IP

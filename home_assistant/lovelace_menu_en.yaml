@@ -3,27 +3,38 @@ views:
     path: Saltlevel
     badges: []
     cards:
-      - type: entities
-        entities:
-          - entity: sensor.saltlevel_distance
-            name: Distance
-          - entity: sensor.saltlevel_height
-            name: Height
-          - entity: sensor.saltlevel_procent
-            name: Procent
-          - entity: sensor.fill_salt
-      - type: entities
-        entities:
-          - entity: number.min_distance_salt
-          - entity: number.max_distance_salt
-          - entity: sensor.fill_salt
-          - entity: sensor.version
-          - entity: sensor.salt_level_ip
-          - entity: sensor.wifi_signal
-          - entity: sensor.wifi_signal_db
-        title: Settings
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.saltlevel_procent
+                name: Procent
+              - entity: sensor.saltlevel_height
+                name: Height
+              - entity: sensor.saltlevel_distance
+                name: Distance
+              - entity: sensor.saltlevel_fill_salt
+                name: Fill
+              - entity: sensor.saltlevel_refilled_on
+                name: Filled on
+            title: Saltlevel
+          - type: entities
+            entities:
+              - entity: light.saltlevel_led
+                name: Led
+              - entity: switch.saltlevel_measurement
+                name: Measurement
+              - entity: number.saltlevel_led_brightness
+                name: Led brightness
+              - entity: number.saltlevel_max_distance_salt
+                name: Max distance salt
+              - entity: number.saltlevel_min_distance_salt
+                name: Min distance salt
+              - entity: number.saltlevel_fill_salt_distance
+                name: Fill salt distance
+            show_header_toggle: false
       - elements:
-          - entity: sensor.salt_level
+          - entity: sensor.saltlevel_animation
             image: local/images/softener.png
             state_image:
               '0': local/images/softener0.png
@@ -43,3 +54,13 @@ views:
         image: local/images/softener.png
         panel: true
         type: picture-elements
+      - type: entities
+        entities:
+          - entity: sensor.saltlevel_uptime
+            name: Uptime
+          - entity: sensor.saltlevel_version
+            name: Version
+          - entity: sensor.saltlevel_wifi_signal
+            name: WiFi Signal
+          - entity: sensor.saltlevel_ip
+            name: Saltlevel IP
