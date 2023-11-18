@@ -1,17 +1,17 @@
 substitutions:
   name: zoutniveau
   friendly_name: Zoutniveau
-  salt_distance: Zoutniveau afstand
-  salt_procent: Zoutniveau procent
-  salt_level_animation: Zoutniveau animatie
-  salt_height: Zoutniveau hoogte
+  salt_distance: afstand
+  salt_procent: procent
+  salt_level_animation: animatie
+  salt_height: hoogte
   salt_version: Versie
-  salt_fill_last: Zout bijgevuld op
-  salt_fill_salt: Zout bijvullen
+  salt_fill_last: Bijgevuld op
+  salt_fill_salt: Bijvullen
   salt_height_min: Min afstand zout
   salt_height_max: Max afstand zout
   salt_height_fill: Zout bijvullen afstand
-  salt_ip: Zoutniveau IP
+  salt_ip: IP
   salt_wifi_signal_db: WiFi Signaal dB
   salt_wifi_signal_db_percent: WiFi Signaal
   salt_uptime: Uptime
@@ -19,6 +19,10 @@ substitutions:
   days: dagen
   salt_fill_yes: ja
   salt_fill_no: nee
+  salt_use_led: Led aktief
+  never: Nooit
+  salt_level_measure: meting
+  led_brightness: Led helderheid
 
 text_sensor:
   # Expose last regeneration information as sensor

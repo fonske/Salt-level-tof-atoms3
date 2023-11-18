@@ -1,17 +1,17 @@
 substitutions:
   name: saltlevel
   friendly_name: Saltlevel
-  salt_distance: Saltlevel distance
-  salt_procent: Saltlevel procent
-  salt_level_animation: Saltlevel animation
-  salt_height: Saltlevel height
+  salt_distance: distance
+  salt_procent: procent
+  salt_level_animation: animation
+  salt_height: height
   salt_version: Version
-  salt_fill_last: Salt refilled on
+  salt_fill_last: Refilled on
   salt_fill_salt: Fill salt
   salt_height_min: Min distance salt
   salt_height_max: Max distance salt
   salt_height_fill: Fill salt distance
-  salt_ip: Saltlevel IP
+  salt_ip: IP
   salt_wifi_signal_db: WiFi Signal dB
   salt_wifi_signal_db_percent: WiFi Signal
   salt_uptime: Uptime
@@ -19,3 +19,7 @@ substitutions:
   days: days
   salt_fill_yes: "yes"
   salt_fill_no: "no"
+  salt_use_led: Led active
+  never: Never
+  salt_level_measure: Measurement
+  led_brightness: Led brightness
