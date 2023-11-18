@@ -8,11 +8,11 @@ Kopieer daar alle plaatjes in van [/www/images](../www/images)
 Voorbeeld dashboard: 
 ![Example](Printscreen_NL.jpg)
 
-## Automations en sensor(s)
-[clack.yaml](../clack.yaml) samenvoegen met configuration.yaml of beter:
+## Automations
+[automation_saltalarm_nl.yaml](../automation_saltalarm_nl.yaml) samenvoegen met automations.yaml (let op inspringingen) of beter:
 
 ### Bestand op eigen lokatie: 
-[clack.yaml](../clack.yaml) op een eigen lokatie zetten:
+[automation_saltalarm_nll](../automation_saltalarm_nl) op een eigen lokatie zetten:
 configuration.yaml aanpassen naar:
 
 ```yml
@@ -20,7 +20,7 @@ homeassistant:
   packages: !include_dir_named packages
 ```
 
-Dan directory /packages aanmaken in /config en daar de clack.yaml in kopieren
+Dan directory /packages aanmaken in /config en daar de automation_saltalarm_nl.yaml in kopieren
 HA opnieuw starten
 
 ## Configuratie
