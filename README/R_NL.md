@@ -29,6 +29,11 @@ HA opnieuw starten
 
 ## Uitleg werking
 
+Met de schuifregelaars de juiste hoogtes instellen.
+Voorbeeld van de minimale en maximale hoogte vind u [hier.](../README/min_max_NL.jpg) 
+Zout bijvullen afstand is de afstand vanaf wanneer er een alarm (automation) zal verstuurd worden (waarde van Bijvullen wordt dan "ja")
+
+### Relais configuratie
 In clack.yaml moeten de tijden nog aangepast worden aan je eigen tijden (timer) voor de simulatie van het regenereren in HA.
 Even met een stopwatch ofzo, nadat de regeneratie handmatig gestart is. Elke keer dat de inwendige schuif beweegt is een stap (zie ook op het display vd clack)
 Het kan zijn, dat je clack 5 cyclussen heeft ipv 4. Backwash, brine, backwash, rinse, fill. In de code is de 2e backwash eruit gehaald, wat het meest gangbaar is, voor de meeste ontharders. Anders kan je een timer toevoegen en de code wat aanpassen in clack.yaml
