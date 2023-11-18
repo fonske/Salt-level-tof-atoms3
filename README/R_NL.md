@@ -1,16 +1,12 @@
-# Clack - Lezer
+# Zoutniveau meting met AtomS3 lite en TOF sensor
 
 ## Lovelace menu
-Om het lovelace menu volledig te benutten dient via hacs (frontend)
-de volgende repositories geinstalleerd te worden (verkennen en downloaden)
+Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
+dient er een map /www/images aangemaakt te worden in je home assistant directory.
+Kopieer daar alle plaatjes in van [/www/images](../www/images)
 
-Voorbeeld dahsboard: 
+Voorbeeld dashboard: 
 ![Example](Printscreen_NL.jpg)
-
-* stack-in-card
-* multiple-entity-row
-* bar-card
-* apexcharts  (staafdiagram)
 
 ## Automations en sensor(s)
 [clack.yaml](../clack.yaml) samenvoegen met configuration.yaml of beter:
