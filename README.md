@@ -2,7 +2,7 @@
  Salt level detection brine tank with TOF and Atom S3 lite m5stack
 
  ## Dutch:
-[README](R_NL.md)
+[README](/README/R_NL.md)
 
 ## English:
-[README](R_EN.md)
+[README](/README/R_EN.md)
