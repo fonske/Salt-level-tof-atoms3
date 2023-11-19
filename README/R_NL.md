@@ -43,7 +43,7 @@ De LED verspringt van kleur bij:
 
 75-100% zoutniveau in de tank = GROEN
 
-### DRUK KNOP
+### DRUKKNOP
 De drukknop heeft twee functies:
 kort ingedrukt (led gaat uit): stop de niveaumeting, handig om bij te vullen van zout.
 kort ingedrukt (led gaat aam): zet de niveaumeting voort.
@@ -52,9 +52,6 @@ Lang ingedrukt (voor 3 sec.). Registreer tijd en datum. Handig om te zien wannee
 Succes!
 
 ## Noot:
-Er is een 3d print bestand bijgevoegd om zelf de behuizing te printen.
+Er is een  [3d print](../README/Saltlevel_Atoms3_TOF.stl)  bestand bijgevoegd om zelf de behuizing te printen.
 De behuizing dient met dubbelzijdige tape op het zoutreservoir aan de bovenkant gemonteerd te worden.
-
-
-
 
