@@ -4,7 +4,7 @@
 The hardware consist of:
 - the [Atom S3 lite](https://www.tinytronics.nl/shop/nl/development-boards/microcontroller-boards/met-wi-fi/m5stack-atom-s3-lite-esp32-s3-development-board) from M5stack
 - the [TOF sensor](https://www.tinytronics.nl/shop/nl/platformen-en-systemen/m5stack/unit/m5stack-tof-unit) from M5stack
-- option: [5cm kabeltje](https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/grove-compatible/m5stack-grove-kabel-5cm-10-stuks) (a litlle shorter then the original cable delivered with TOF sensor, only per 10 pieces)
+- option: [5cm cable](https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/grove-compatible/m5stack-grove-kabel-5cm-10-stuks) (a litlle shorter then the original cable delivered with TOF sensor, only per 10 pieces)
 - [3D printed](../README/Saltlevel_Atoms3_TOF.stl)  enclosure.
 
 ## Software
