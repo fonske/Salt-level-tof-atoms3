@@ -1,73 +1,66 @@
-# Clack - Reader
+# Saltlevel measurement with AtomS3 lite and TOF sensor
+
+## Hardware
+The hardware consist of:
+- the [Atom S3 lite](https://www.tinytronics.nl/shop/nl/development-boards/microcontroller-boards/met-wi-fi/m5stack-atom-s3-lite-esp32-s3-development-board) from M5stack
+- the [TOF sensor](https://www.tinytronics.nl/shop/nl/platformen-en-systemen/m5stack/unit/m5stack-tof-unit) from M5stack
+- option: [5cm kabeltje](https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/grove-compatible/m5stack-grove-kabel-5cm-10-stuks) (a litlle shorter then the original cable delivered with TOF sensor, only per 10 pieces)
+- [3D printed](../README/Saltlevel_Atoms3_TOF.stl)  enclosure.
+
+## Software
+Everything is coded in ESPHOME
+Connecting through wifi hotspot and [IMPROV bluetooth](https://www.improv-wifi.com/) is possible.
 
 ## Lovelace menu
-In order to use the front-end as shown here: 
+For the salt level simulation, as seen in the underneath picture, create a directory /www/images and copy all the images
+[/www/images](../www/images) to your home assistant directory
+
+Voorbeeld dashboard: 
 ![Example](Printscreen_EN.jpg)
 
-You will need to install HACS and the following plugins:
+The dashboard itself can be placed in home assistant by: three dashes - edit dashboard - raw configuration editor
+Copy and add the text from [lovelace_menu_nl.yaml](../home_assistant/lovelace_menu_nl.yaml) and click save.
+You got now an extra menu Saltlevel
 
-* stack-in-card
-* multiple-entity-row
-* bar-card
-* apexcharts  (Bar Charts)
+## Automations
+[automation_saltalarm_en.yaml](../home_assistant/automation_saltalarm_nl.yaml) combine with automations.yaml (take notice of the indents) or better:
 
-## automations and sensor
-Add the content of [clack_en.yaml](../clack_en.yaml) to your current configuration file in Home Assistant.
-Or better:
-
-### Custom file location: 
-If you want to keep the file seperate from your config file you can include them like so:
+### File on own lokation: 
+[automation_saltalarm_en.yaml](../home_assistant/automation_saltalarm_nl) put on own location:
+Adjust configuration.yaml to:
 
 ```yml
 homeassistant:
   packages: !include_dir_named packages
 ```
-Now you can create a folder called `packages` in the folder `config` and place the `clack_en.yaml` there. 
 
-Make sure to restart HomeAssistant.
+Then make directory /packages in /config and copy the automation_saltalarm_nl.yaml to this directory
+Restart home assistant.
 
-## Configuration
-### clack_en.yaml
-You will need to time your clack head (with a stopwatch) and adjust the times in the `clack_EN.yaml` to the time your clack actually takes per step. 
+## Uitleg werking
 
-You can see the status of the steps on the display.
+Met de schuifregelaars de juiste hoogtes instellen.
+Voorbeeld van de minimale en maximale hoogte vind u [hier.](../README/min_max_NL.jpg) 
+Zout bijvullen afstand is de afstand vanaf wanneer er een alarm (automation) zal verstuurd worden (waarde van Bijvullen wordt dan "ja")
 
-### Pictures salt tank
-In order to get the salt tank level to display you will need to copy the pictures in the `/www/images` directory to your local `/www/images` directory.
+### LED
+De LED op de AtomS3 lite is in of uit te schakelen. Helderheid op 0 is ook LED uit.
+De LED verspringt van kleur bij:
 
-### Relays
-The 2 relays that the clack head has still need to be set-up.
-* Relay1: Counting of water usage 
-* Relay2: Regeneration pulse
+0-25% zoutniveau in de tank = ROOD
 
-You can see on the back of the circuit board where to hook each wire up to makred as `RLY1`, `+COM` and  `RLY2` for this to work these need to be connected in the srew terminals on the right side of the Clack board.
-![Schematic](diagram.png)
+25-75% zoutniveau in de tank = BLAUW
 
-### Relay Config
-Extra document (still in dutch sorry) with info can be found here: [Settings PDF](instelkaart%20clack%20ws1.pdf) or the full english manual here: [Manual](Full-CLACKWS1-Manual.pdf)
+75-100% zoutniveau in de tank = GROEN
 
-1. Press `arrow down` and the `next` button for 5 secconds
-2. Press next (softening) is now visible
-3. press the `next` button till you see `<rlY 1>` Thange this to `ON` (softening  L)
-4. Press `next`
-5. Set the value to `2 L` (this gives a pulse every 2 liters)
-5. Press `next`
-6. set time: 0.01 min
-7. Press `next`
-8. set  `rlY 2` "time" to on (gives a pulse when regeneration starts)
-9. Press `next`
-10. set time: 0.01 min
-11. press next  2 times and you are done
+### DRUKKNOP
+De drukknop heeft twee functies:
+kort ingedrukt (led gaat uit): stop de niveaumeting, handig om bij te vullen van zout.
+kort ingedrukt (led gaat aam): zet de niveaumeting voort.
 
-Good Luck!
+Lang ingedrukt (voor 3 sec.). Registreer tijd en datum. Handig om te zien wanneer voor het laatst bijgevuld is.
+Succes!
 
-## Note:
-Mounting the circuitboard with ESP in the Clack housing can be tricky.
-To be able to close the Clack reader the Circuitboard will point slightly inwards.
-
-The ESP might come loose when attempting to close the clack head.
-
-Update: with the use of the smaller wemos s3 mini, this is not a problem anymore.
-
-
-
+## Noot:
+Er is een  [3d print](../README/Saltlevel_Atoms3_TOF.stl)  bestand bijgevoegd om zelf de behuizing te printen.
+De behuizing dient met dubbelzijdige tape op het zoutreservoir aan de bovenkant gemonteerd te worden.
