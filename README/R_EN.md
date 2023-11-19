@@ -15,7 +15,7 @@ Connecting through wifi hotspot and [IMPROV bluetooth](https://www.improv-wifi.c
 For the salt level simulation, as seen in the underneath picture, create a directory /www/images and copy all the images
 [/www/images](../www/images) to your home assistant directory
 
-Voorbeeld dashboard: 
+Example dashboard: 
 ![Example](Printscreen_EN.jpg)
 
 The dashboard itself can be placed in home assistant by: three dashes - edit dashboard - raw configuration editor
