@@ -7,6 +7,10 @@ Er wordt gebruik gemaakt van
 - optie: [5cm kabeltje](https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/grove-compatible/m5stack-grove-kabel-5cm-10-stuks) (net iets korter dan meegeleverd wordt met de TOF sensor, per 10st helaas)
 - [3D printed](../README/Saltlevel_Atoms3_TOF.stl)  behuizing
 
+## Software
+Alles is in ESPHOME geprogrammeerd.
+Zowel aanmelden via wifi hotspot, als [IMPROV bluetooth](https://www.improv-wifi.com/) is ondersteund.
+
 ## Lovelace menu
 Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
 dient er een map /www/images aangemaakt te worden in je home assistant directory.
