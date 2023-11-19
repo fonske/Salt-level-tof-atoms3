@@ -1,5 +1,11 @@
 # Zoutniveau meting met AtomS3 lite en TOF sensor
 
+## Hardware
+Er wordt gebruik gemaakt van 
+- de [Atom S3](https://www.tinytronics.nl/shop/nl/development-boards/microcontroller-boards/met-wi-fi/m5stack-atom-s3-lite-esp32-s3-development-board) lite van M5stack
+- de TOF sensor van M5stack
+- optie: 5cm kabeltje (net iets korter dan meegeleverd wordt met de TOF sensor)
+
 ## Lovelace menu
 Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
 dient er een map /www/images aangemaakt te worden in je home assistant directory.
