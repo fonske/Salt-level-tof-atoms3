@@ -35,7 +35,10 @@ wifi:
   ap:
     ssid: ${name}
     password: "configesp"
- 
+
+esp32_improv:
+  authorizer: None 
+   
 captive_portal:
 
 # Sync time with sntp server
