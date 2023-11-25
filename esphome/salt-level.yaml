@@ -2,14 +2,14 @@ substitutions:
   device_description: "Salt level detection with M5Stack AtomS3 lite and TOF sensor"
   timezone: "Europe/Amsterdam"
 
-## choose between languages. NL or EN are available. Uncomment and comment out the correct label file.
+## choose between languages. NL or EN are available.
 packages:
   remote_package:
     url: https://github.com/fonske/Salt-level-tof-atoms3
     ref: main
-    files: 
-#      - esphome/labels/.salt-level-labels-en.yaml
-      - esphome/labels/.salt-level-labels-nl.yaml
+    refresh: 0s
+    files: [esphome/labels/.salt-level-labels-nl.yaml ]
+## choices are: esphome/labels/.salt-level-labels-en.yaml, esphome/labels/.salt-level-labels-nl.yaml
 
 ## for developing/testing, uncomment local includes and comment out remote_package part.
 #packages:
