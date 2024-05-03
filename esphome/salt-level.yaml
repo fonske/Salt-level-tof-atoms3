@@ -20,6 +20,11 @@ esphome:
   name: ${name}
   friendly_name: ${friendly_name}
   name_add_mac_suffix: false
+  includes:
+    - tof_vl53l1x.h  #ToF4M M5stack
+  libraries:
+    - "Wire"
+    - "pololu/VL53L1X"
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -84,35 +89,32 @@ script:
               return id(fill_last);
 
 sensor:
-  - platform: vl53l0x
-    id: distance_cm
-    address: 0x29
-    update_interval: 5s
-    long_range: false
-    internal: false
-    filters:
-      - filter_out: nan
-      - lambda: return x*100;
-      ### comment with # if you want a direct reading:
-      - median:
-          window_size: 5
-          send_every: 3
-          send_first_at: 1
-      - delta: 0.5
-      ###
-      - clamp:
-          min_value: 0.0
-          max_value: 160.0
-    on_value:
-      then:
-        - if:
-            condition:
-              - switch.is_on: salt_fill_switch
-            then:
-            - sensor.template.publish:
-                id: salt_distance
-                state: !lambda |-
-                  return id(distance_cm).state;
+# VL53L1X TOF               
+  - platform: custom
+    lambda: |-
+      auto my_sensor = new MyCustomSensor();
+      App.register_component(my_sensor);
+      return {my_sensor};
+
+    sensors:
+      name: ${salt_distance}
+      accuracy_decimals: 1
+      unit_of_measurement: "cm"
+      id: distance_cm
+      icon: mdi:ruler
+      internal: false
+      filters:
+        - filter_out: nan
+        - lambda: return x/10;
+        - clamp:
+            min_value: 0.0
+            max_value: 400.0
+      on_value:
+        then:
+          - sensor.template.publish:
+              id: salt_distance
+              state: !lambda |-
+                return id(distance_cm).state;
 
 # ultrasonic distance sensor.
   - platform: template
@@ -319,6 +321,12 @@ binary_sensor:
                     strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
                     id(fill_last) = str;
                     return  { str };
+
+###  ESP restart button
+button:
+  - platform: restart
+    id: restart_button
+    name: Esp restart
 
 switch:
   - platform: template
