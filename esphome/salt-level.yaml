@@ -42,9 +42,6 @@ wifi:
     password: "configesp"
     ap_timeout: 15s
 
-esp32_improv:
-  authorizer: None 
-   
 captive_portal:
 
 # Sync time with sntp server
@@ -56,7 +53,14 @@ time:
 # Enable logging
 logger:
   baud_rate: 0
-  level: INFO
+  logs:
+    esp32.preferences: DEBUG
+    sensor: DEBUG
+    text_sensor: DEBUG
+    switch: DEBUG
+    button: DEBUG
+    number: DEBUG
+    component: ERROR
 
 # Enable Home Assistant API
 api:
