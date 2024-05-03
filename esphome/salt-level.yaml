@@ -6,7 +6,7 @@ substitutions:
 packages:
   remote_package:
     url: https://github.com/fonske/Salt-level-tof-atoms3
-    ref: main
+    ref: tof2
     refresh: 0s
     files: [esphome/labels/.salt-level-labels-nl.yaml ]
 ## choices are: esphome/labels/.salt-level-labels-en.yaml, esphome/labels/.salt-level-labels-nl.yaml
@@ -325,12 +325,6 @@ binary_sensor:
                     strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
                     id(fill_last) = str;
                     return  { str };
-
-###  ESP restart button
-button:
-  - platform: restart
-    id: restart_button
-    name: Esp restart
 
 switch:
   - platform: template
