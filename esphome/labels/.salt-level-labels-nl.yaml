@@ -21,7 +21,7 @@ substitutions:
   salt_fill_no: nee
   salt_use_led: Led aktief
   never: Nooit
-  salt_level_measure: meting
+  salt_level_measure: Meting
   led_brightness: Led helderheid
 
 text_sensor:
