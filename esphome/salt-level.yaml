@@ -16,6 +16,11 @@ packages:
 #  substitutions: !include labels/.salt-level-labels-nl.yaml
 #  substitutions: !include labels/.salt-level-labels-en.yaml
 
+external_components:
+  - source: github://pr#4444
+    components: [async_tcp, web_server_base]
+    refresh: always
+    
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
@@ -25,6 +30,10 @@ esphome:
   libraries:
     - "Wire"
     - "pololu/VL53L1X"
+  on_boot:
+    priority: 200
+    then:
+      - script.execute: on_boot
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -62,6 +71,7 @@ logger:
     number: DEBUG
     component: ERROR
 
+
 # Enable Home Assistant API
 api:
   reboot_timeout: 0s
@@ -87,10 +97,17 @@ script:
 ###  On reboot or powerloss of the esp, set the fill last date and time
   - id: on_boot
     then:
+      - delay: 5s
       - text_sensor.template.publish:
             id: salt_fill_last
             state: !lambda |-
               return id(fill_last);
+      - switch.turn_on: salt_fill_switch
+      - light.turn_on: led
+      - sensor.template.publish:
+          id: salt_distance
+          state: !lambda |-
+            return id(distance_cm).state;
 
 sensor:
 # VL53L1X TOF               
@@ -101,24 +118,34 @@ sensor:
       return {my_sensor};
 
     sensors:
-      name: ${salt_distance}
+      name: ${salt_distance} TOF
       accuracy_decimals: 1
       unit_of_measurement: "cm"
       id: distance_cm
       icon: mdi:ruler
       internal: false
       filters:
-        - filter_out: nan
+##        - filter_out: nan
+        - lambda: |-
+            if (isnan(x)) {
+              return 0;
+            } else {
+              return x;
+            }
         - lambda: return x/10;
         - clamp:
             min_value: 0.0
             max_value: 400.0
       on_value:
         then:
-          - sensor.template.publish:
-              id: salt_distance
-              state: !lambda |-
-                return id(distance_cm).state;
+          - if:
+              condition:
+                switch.is_on: salt_fill_switch
+              then:          
+              - sensor.template.publish:
+                  id: salt_distance
+                  state: !lambda |-
+                    return id(distance_cm).state;
 
 # ultrasonic distance sensor.
   - platform: template
@@ -130,25 +157,29 @@ sensor:
     update_interval: never
     on_value:
       then:
-        - sensor.template.publish:
-            id: salt_procent
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
-              const float min_distance = id(salt_height_min).state; // height in cm to highest level
-              return int((1-((id(salt_distance).state - min_distance)/max_distance))*100);
-        - sensor.template.publish:
-            id: salt_height
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-              return max_distance-id(salt_distance).state;
-        - text_sensor.template.publish:
-            id: salt_fill_salt
-            state: !lambda |-
-              if (id(salt_height).state < id(salt_height_fill).state) {
-                return {"${salt_fill_yes}"};
-              } else {
-                return {"${salt_fill_no}"};
-              }
+        - if:
+            condition:
+              switch.is_on: salt_fill_switch
+            then:
+            - sensor.template.publish:
+                id: salt_procent
+                state: !lambda |-
+                  const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
+                  const float min_distance = id(salt_height_min).state; // height in cm to highest level
+                  return int((1-((id(salt_distance).state - min_distance)/max_distance))*100);
+            - sensor.template.publish:
+                id: salt_height
+                state: !lambda |-
+                  const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
+                  return max_distance-id(salt_distance).state;
+            - text_sensor.template.publish:
+                id: salt_fill_salt
+                state: !lambda |-
+                  if (id(salt_height).state < id(salt_height_fill).state) {
+                    return {"${salt_fill_yes}"};
+                  } else {
+                    return {"${salt_fill_no}"};
+                  }
     
       
   # ultrasonic distance sensor calculate tank_percentage
@@ -164,7 +195,7 @@ sensor:
         if (x >= 100) return 100.0;
         else if (x <= 0.0) return 0.0;
         else return x;
-    on_value_range:
+    on_value_range:  
       - above: 0.0
         below: 25.0
         then:
@@ -291,8 +322,8 @@ light:
     # RMT 0 channels will be occupied by IR
     rmt_channel: 1
     chipset: ws2812
-    restore_mode: ALWAYS_OFF
-#    internal: True
+#    restore_mode: ALWAYS_ON
+    internal: True
 
 #G41=Button
 binary_sensor:
@@ -331,7 +362,7 @@ switch:
     id: salt_fill_switch
     name: ${salt_level_measure}
     optimistic: True
-    restore_mode: RESTORE_DEFAULT_ON 
+#    restore_mode: RESTORE_DEFAULT_ON 
     lambda: return id(salt_fill_switch).state;
     turn_on_action:
       - light.turn_on:
