@@ -13,6 +13,8 @@ views:
                 name: Height
               - entity: sensor.saltlevel_distance
                 name: Distance
+              - entity: sensor.saltlevel_distance_tof
+                name: Distance TOF
               - entity: sensor.saltlevel_fill_salt
                 name: Fill
               - entity: sensor.saltlevel_refilled_on
