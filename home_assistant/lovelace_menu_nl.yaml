@@ -20,8 +20,6 @@ views:
             title: Zoutniveau
           - type: entities
             entities:
-              - entity: light.zoutniveau_led
-                name: Led
               - entity: switch.zoutniveau_meting
                 name: Meting
               - entity: number.zoutniveau_led_helderheid
