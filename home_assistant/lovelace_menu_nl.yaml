@@ -13,6 +13,8 @@ views:
                 name: Hoogte
               - entity: sensor.zoutniveau_afstand
                 name: Afstand
+              - entity: sensor.zoutniveau_afstand_tof
+                name: Afstand TOF
               - entity: sensor.zoutniveau_bijvullen
                 name: Bijvullen
               - entity: sensor.zoutniveau_bijgevuld_op
