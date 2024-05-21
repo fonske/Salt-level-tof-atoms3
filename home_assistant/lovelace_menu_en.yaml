@@ -20,8 +20,6 @@ views:
             title: Saltlevel
           - type: entities
             entities:
-              - entity: light.saltlevel_led
-                name: Led
               - entity: switch.saltlevel_measurement
                 name: Measurement
               - entity: number.saltlevel_led_brightness
