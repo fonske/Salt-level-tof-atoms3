@@ -75,7 +75,14 @@ logger:
 # Enable Home Assistant API
 api:
   reboot_timeout: 0s
- 
+  services:
+    - service: set_last_distance
+      variables:
+        last_distance_value: int
+      then:
+        - globals.set:
+            id: last_distance
+            value: !lambda 'return last_distance_value;' 
 ota:
 
 web_server:
@@ -92,6 +99,11 @@ globals:
     type: std::string
     restore_value: yes
     initial_value: '"${never}"'
+
+  - id: last_distance
+    type: float
+    restore_value: yes
+    initial_value: '0.00'
 
 script:
 ###  On reboot or powerloss of the esp, set the fill last date and time
@@ -110,6 +122,14 @@ script:
             return id(distance_cm).state;
 
 sensor:
+  - platform: template
+    id: laatste_afstand
+    name: ${salt_distance}
+    icon: mdi:water
+    unit_of_measurement: cm
+    accuracy_decimals: 1
+    update_interval: never
+
 # VL53L1X TOF               
   - platform: custom
     lambda: |-
@@ -149,29 +169,44 @@ sensor:
 
 # ultrasonic distance sensor.
   - platform: template
-    name: ${salt_distance}
+    name: salt_distance #${salt_distance}
     id:  salt_distance
     unit_of_measurement: "cm"
     accuracy_decimals: 1
     icon: "mdi:arrow-expand-vertical" 
     update_interval: never
+    internal: true
     on_value:
-      then:
+       then:
         - if:
             condition:
               switch.is_on: salt_fill_switch
             then:
+            - globals.set:
+                id: last_distance
+                value: !lambda |-
+                  const float old_distance = id(last_distance); 
+                  const float new_distance = id(distance_cm).state;
+                  if (new_distance > old_distance) {
+                    return id(salt_distance).state;
+                  } else {
+                    return old_distance;
+                  }
+            - sensor.template.publish:
+                id: laatste_afstand
+                state: !lambda |-
+                  return id(last_distance);
             - sensor.template.publish:
                 id: salt_procent
                 state: !lambda |-
                   const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
                   const float min_distance = id(salt_height_min).state; // height in cm to highest level
-                  return int((1-((id(salt_distance).state - min_distance)/max_distance))*100);
+                  return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
             - sensor.template.publish:
                 id: salt_height
                 state: !lambda |-
                   const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-                  return max_distance-id(salt_distance).state;
+                  return max_distance-id(laatste_afstand).state;
             - text_sensor.template.publish:
                 id: salt_fill_salt
                 state: !lambda |-
@@ -180,7 +215,6 @@ sensor:
                   } else {
                     return {"${salt_fill_no}"};
                   }
-    
       
   # ultrasonic distance sensor calculate tank_percentage
   - platform: template
@@ -356,6 +390,9 @@ binary_sensor:
                     strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
                     id(fill_last) = str;
                     return  { str };
+              - globals.set:
+                  id: last_distance
+                  value: '0.0'
 
 switch:
   - platform: template
@@ -397,12 +434,12 @@ number:
             state: !lambda |-
               const float max_distance = id(salt_height_max).state; // height in cm to lowest level
               const float min_distance = id(salt_height_min).state; // height in cm to highest level
-              return int((1-((id(salt_distance).state - min_distance)/max_distance))*100);
+              return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
             id: salt_height
             state: !lambda |-
               const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-              return max_distance-id(salt_distance).state; 
+              return max_distance-id(laatste_afstand).state; 
 
 
     ## Set maximum distance (from bottom sensor / underneath plastic cap) to water level (to measure in pipe?)
@@ -426,12 +463,12 @@ number:
             state: !lambda |-
               const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
               const float min_distance = id(salt_height_min).state; // height in cm to highest level
-              return int((1-((id(salt_distance).state - min_distance)/max_distance))*100);
+              return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
             id: salt_height
             state: !lambda |-
               const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-              return max_distance-id(salt_distance).state; 
+              return max_distance-id(laatste_afstand).state; 
 
     ## Set alarm level
   - platform: template
