@@ -8,8 +8,11 @@ packages:
     url: https://github.com/fonske/Salt-level-tof-atoms3
     ref: tof2
     refresh: 0s
-    files: [esphome/labels/.salt-level-labels-nl.yaml ]
-## choices are: esphome/labels/.salt-level-labels-en.yaml, esphome/labels/.salt-level-labels-nl.yaml
+    files: [
+            esphome/labels/.salt-level-labels-nl.yaml,  
+            #esphome/labels/.salt-level-labels-en.yaml, 
+           ]
+## choices are: esphome/labels/.salt-level-labels-en.yaml, or esphome/labels/.salt-level-labels-nl.yaml,
 
 ## for developing/testing, uncomment local includes and comment out remote_package part.
 #packages:
@@ -111,19 +114,39 @@ script:
     then:
       - delay: 5s
       - text_sensor.template.publish:
-            id: salt_fill_last
-            state: !lambda |-
-              return id(fill_last);
+          id: salt_fill_last
+          state: !lambda |-
+            return id(fill_last);
       - switch.turn_on: salt_fill_switch
       - light.turn_on: led
       - sensor.template.publish:
           id: salt_distance
           state: !lambda |-
             return id(distance_cm).state;
+  - id: recalculate
+    then:
+      - sensor.template.publish:
+          id: salt_height
+          state: !lambda |-
+            return id(salt_height_max).state-id(last_distance_cm).state;
+      - sensor.template.publish:
+          id: salt_procent
+          state: !lambda |-
+            const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
+            const float min_distance = id(salt_height_min).state; // height in cm to highest level
+            return int((1/((max_distance - min_distance)/id(salt_height).state))*100);
+      - text_sensor.template.publish:
+          id: salt_fill_salt
+          state: !lambda |-
+            if (id(salt_height).state < id(salt_height_fill).state) {
+              return {"${salt_fill_yes}"};
+            } else {
+              return {"${salt_fill_no}"};
+             }
 
 sensor:
   - platform: template
-    id: laatste_afstand
+    id: last_distance_cm
     name: ${salt_distance}
     icon: mdi:water
     unit_of_measurement: cm
@@ -193,28 +216,10 @@ sensor:
                     return old_distance;
                   }
             - sensor.template.publish:
-                id: laatste_afstand
+                id: last_distance_cm
                 state: !lambda |-
                   return id(last_distance);
-            - sensor.template.publish:
-                id: salt_procent
-                state: !lambda |-
-                  const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
-                  const float min_distance = id(salt_height_min).state; // height in cm to highest level
-                  return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
-            - sensor.template.publish:
-                id: salt_height
-                state: !lambda |-
-                  const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-                  return max_distance-id(laatste_afstand).state;
-            - text_sensor.template.publish:
-                id: salt_fill_salt
-                state: !lambda |-
-                  if (id(salt_height).state < id(salt_height_fill).state) {
-                    return {"${salt_fill_yes}"};
-                  } else {
-                    return {"${salt_fill_no}"};
-                  }
+            - script.execute: recalculate
       
   # ultrasonic distance sensor calculate tank_percentage
   - platform: template
@@ -330,13 +335,15 @@ text_sensor:
     id: salt_version
     name: ${salt_version}
     hide_timestamp: true
+    icon: mdi:new-box
+    entity_category: diagnostic
 
-  # Expose WiFi information as sensors.
+  # Expose WiFi information as sensor.
   - platform: wifi_info
     ip_address:
       name: ${salt_ip}
       icon: mdi:ip-network
-
+  
   # Textsensor "Fill Salt" yes or no.
   - platform: template
     name: ${salt_fill_salt}
@@ -362,8 +369,7 @@ light:
 #G41=Button
 binary_sensor:
   - platform: gpio
-    name: Button
-    id: button
+    id: esp_button
     pin:
       number: GPIO41
       inverted: true
@@ -375,13 +381,16 @@ binary_sensor:
       - delayed_off: 10ms
     on_multi_click:
         - timing:
-             - ON for at most 2s
+             - ON for at most 2s  # led_off and measurement on hold
              - OFF for at least 0.2s
           then:
             - switch.toggle: salt_fill_switch
         - timing:
-             - ON for at least 3s
+             - ON for at least 3s  # reset last_distance value and filling date/time
           then:
+              - globals.set:
+                  id: last_distance
+                  value: '0.0'
               - text_sensor.template.publish:
                   id: salt_fill_last
                   state: !lambda |-
@@ -390,9 +399,6 @@ binary_sensor:
                     strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
                     id(fill_last) = str;
                     return  { str };
-              - globals.set:
-                  id: last_distance
-                  value: '0.0'
 
 switch:
   - platform: template
@@ -410,6 +416,12 @@ switch:
     turn_off_action:
       - light.turn_off:
           id: led
+
+## ESP restart button
+button:
+  - platform: restart
+    id: restart_button
+    name: ESP restart
 
 # imput numbers as boxes for setting the dimensions of the tank and level alarm.
 number:
@@ -429,17 +441,7 @@ number:
     unit_of_measurement: "cm"
     on_value:
       then:
-        - sensor.template.publish:
-            id: salt_procent
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state; // height in cm to lowest level
-              const float min_distance = id(salt_height_min).state; // height in cm to highest level
-              return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
-        - sensor.template.publish:
-            id: salt_height
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-              return max_distance-id(laatste_afstand).state; 
+        - script.execute: recalculate 
 
 
     ## Set maximum distance (from bottom sensor / underneath plastic cap) to water level (to measure in pipe?)
@@ -458,17 +460,7 @@ number:
     unit_of_measurement: "cm"
     on_value:
       then:
-        - sensor.template.publish:
-            id: salt_procent
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state; // heigt in cm to lowest level
-              const float min_distance = id(salt_height_min).state; // height in cm to highest level
-              return int((1-((id(laatste_afstand).state - min_distance)/max_distance))*100);
-        - sensor.template.publish:
-            id: salt_height
-            state: !lambda |-
-              const float max_distance = id(salt_height_max).state;  // height in cm to lowest level
-              return max_distance-id(laatste_afstand).state; 
+        - script.execute: recalculate
 
     ## Set alarm level
   - platform: template
@@ -480,10 +472,10 @@ number:
     step: 0.1
     entity_category: config
     min_value: 0
-    max_value: 10
+    max_value: 30
     initial_value: 1.5
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "cm"
     update_interval: 600s
     on_value:
       then:
