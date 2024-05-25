@@ -1,5 +1,5 @@
 substitutions:
-  device_description: "Salt level detection with M5Stack AtomS3 lite and TOF sensor"
+  device_description: "Salt level detection with M5Stack AtomS3 lite and TOF vl53l1x sensor"
   timezone: "Europe/Amsterdam"
 
 ## choose between languages. NL or EN are available.
