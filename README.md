@@ -12,7 +12,9 @@
 [README](/README/R_EN.md)
 
 
-
+Two branches:
+Main: VL53L0X sensor
+Tof2: VL53L1X sensor
 
 If you like my work:
 
