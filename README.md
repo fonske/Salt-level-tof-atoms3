@@ -13,8 +13,10 @@
 
 
 Two branches:
-Main: VL53L0X sensor
-Tof2: VL53L1X sensor
+
+main: VL53L0X sensor
+
+tof2: VL53L1X sensor
 
 If you like my work:
 
