@@ -9,7 +9,7 @@ Er wordt gebruik gemaakt van
 
 ## Software
 Alles is in ESPHOME geprogrammeerd.
-Zowel aanmelden via wifi hotspot, als [IMPROV bluetooth](https://www.improv-wifi.com/) is ondersteund.
+Eigen wifi gegevens invullen via wifi hotspot met als wachtwoord: configesp.
 
 ## Lovelace menu
 Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
@@ -43,6 +43,13 @@ HA opnieuw starten
 Met de schuifregelaars de juiste hoogtes instellen.
 Voorbeeld van de minimale en maximale hoogte vind u [hier.](../README/min_max_NL.jpg) 
 Zout bijvullen afstand is de afstand vanaf wanneer er een alarm (automation) zal verstuurd worden (waarde van Bijvullen wordt dan "ja")
+Dit is gemeten vanaf de onderkant van de tank, dus vanaf de maximale afstand naar boven toe.
+
+Omdat er veel waterontharders zijn waar het water boven het zout staat (klein zoutreservoir), zit er een slimme functie ingebouwd in de afstandmeting
+Namelijk, de sensor meet de afstand naar beneden toe. De te meten afstand wordt dan alleen maar groter als het zout op raakt.
+Kortere afstanden worden dan ook niet geregistreerd als laatste waarde, enkel langere afstanden. Zo heeft water wat boven het zout uitkomt geen meet invloed meer.
+Er zijn 2 registratie: Afstand en Afstand TOF.
+Afstand is de meting met de slimme functie. Afstand TOF meet nog steeds continu elke 10 sec maar heeft geen invloed op de procent schaal of berekeningen daaraan.
 
 ### LED
 De LED op de AtomS3 lite is in of uit te schakelen. Helderheid op 0 is ook LED uit.
@@ -56,11 +63,11 @@ De LED verspringt van kleur bij:
 
 ### DRUKKNOP
 De drukknop heeft twee functies:
-kort ingedrukt (led gaat uit): stop de niveaumeting, handig om bij te vullen van zout.
-kort ingedrukt (led gaat aam): zet de niveaumeting voort.
+kort ingedrukt (led gaat uit): stop de niveaumeting, handig om zelf even te kijken in het zoutvat.
+kort ingedrukt (led gaat aam): zet de niveaumeting weer voort.
 
 Lang ingedrukt (voor 3 sec.). Registreer tijd en datum. Handig om te zien wanneer voor het laatst bijgevuld is.
-Succes!
+En om de slimme afstand weer te resetten naar 0 en werkelijke meting. Het zout is immers weer bijgevuld
 
 ## Noot:
 Er is een  [3d print](../README/Saltlevel_Atoms3_TOF.stl)  bestand bijgevoegd om zelf de behuizing te printen.
