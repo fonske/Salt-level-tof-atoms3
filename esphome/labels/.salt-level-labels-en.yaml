@@ -23,3 +23,13 @@ substitutions:
   never: Never
   salt_level_measure: Measurement
   led_brightness: Led brightness
+
+text_sensor:
+  # Expose last regeneration information as sensor
+  - platform: template
+    name: ${salt_fill_last}
+    id: salt_fill_last
+    icon: mdi:clock-start
+    update_interval: never
+    lambda: |-
+      return id(fill_last);
