@@ -5,11 +5,11 @@ Er wordt gebruik gemaakt van
 - de [Atom S3 lite](https://www.tinytronics.nl/shop/nl/development-boards/microcontroller-boards/met-wi-fi/m5stack-atom-s3-lite-esp32-s3-development-board) van M5stack
 - de [TOF sensor](https://www.tinytronics.nl/shop/nl/platformen-en-systemen/m5stack/unit/m5stack-tof-unit) van M5stack
 - optie: [5cm kabeltje](https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/grove-compatible/m5stack-grove-kabel-5cm-10-stuks) (net iets korter dan meegeleverd wordt met de TOF sensor, per 10st helaas)
-- [3D printed](../README/Saltlevel_Atoms3_TOF.stl)  behuizing
+- [3D printed](../README/Saltlevel_Atoms3_TOF.stl)  behuizing welke met twee rvs M4 boutjes en moertjes vast gezet kan worden op het deksel van het zout reservoir.
 
 ## Software
 Alles is in ESPHOME geprogrammeerd.
-Eigen wifi gegevens invullen via wifi hotspot met als wachtwoord: configesp.
+Eigen wifi gegevens invullen via wifi hotspot met als wachtwoord: configesp
 
 ## Lovelace menu
 Om het lovelace menu volledig te benutten met de zoutniveau simulatie zoals hieronder in het dashboard te zien is, 
