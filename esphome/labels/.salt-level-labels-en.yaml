@@ -1,10 +1,10 @@
 substitutions:
   name: saltlevel
   friendly_name: Saltlevel
-  salt_distance: distance
-  salt_procent: procent
-  salt_level_animation: animation
-  salt_height: height
+  salt_distance: Distance
+  salt_procent: Procent
+  salt_level_animation: Animation
+  salt_height: Height
   salt_version: Version
   salt_fill_last: Refilled on
   salt_fill_salt: Fill salt
