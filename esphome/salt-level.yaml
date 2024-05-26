@@ -143,7 +143,7 @@ sensor:
   - platform: template
     id: last_distance_cm
     name: ${salt_distance}
-    icon: mdi:water
+    icon: mdi:ruler
     unit_of_measurement: cm
     accuracy_decimals: 1
     update_interval: never
