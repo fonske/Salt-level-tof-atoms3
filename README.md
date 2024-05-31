@@ -20,6 +20,9 @@ main: VL53L0X sensor
 tof2: VL53L1X sensor
 
 
-If you like my work:
+## Contact
+Purchase: alphonsuijtdehaag at gmail dot com, if you are interested in buying this salt level sensor
+
+Help: Please open a issue on this git project.
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ebbenberg)
