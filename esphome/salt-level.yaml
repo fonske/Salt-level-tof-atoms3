@@ -87,6 +87,7 @@ api:
             id: last_distance
             value: !lambda 'return last_distance_value;' 
 ota:
+  platform: esphome
 
 web_server:
   port: 80
