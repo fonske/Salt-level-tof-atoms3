@@ -19,11 +19,6 @@ packages:
 #  substitutions: !include labels/.salt-level-labels-nl.yaml
 #  substitutions: !include labels/.salt-level-labels-en.yaml
 
-external_components:
-  - source: github://pr#4444
-    components: [async_tcp, web_server_base]
-    refresh: always
-
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
