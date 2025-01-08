@@ -41,19 +41,19 @@ esp32:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  fast_connect: true
+  #fast_connect: true
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${name}
     password: "configesp"
-    ap_timeout: 15s
+    ap_timeout: 30s
  
 captive_portal:
 
 # Sync time with sntp server
 time:
-  - platform: sntp
+  - platform: homeassistant
     id: sntp_time
     timezone: ${timezone}
 
