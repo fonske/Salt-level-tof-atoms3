@@ -64,9 +64,9 @@ De LED verspringt van kleur bij:
 ### DRUKKNOP
 De drukknop heeft twee functies:
 kort ingedrukt (led gaat uit): stop de niveaumeting, handig om zelf even te kijken in het zoutvat.
-kort ingedrukt (led gaat aam): zet de niveaumeting weer voort.
+kort ingedrukt (led gaat aan): zet de niveaumeting weer voort.
 
-Lang ingedrukt (voor 3 sec.). Registreer tijd en datum. Handig om te zien wanneer voor het laatst bijgevuld is.
+Lang ingedrukt (voor 3 sec.). Registreer tijd en datum. Handig om te zien wanneer voor het laatst zout bijgevuld is.
 En om de slimme afstand weer te resetten naar 0 en werkelijke meting. Het zout is immers weer bijgevuld
 
 ## Noot:
