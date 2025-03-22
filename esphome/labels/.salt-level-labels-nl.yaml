@@ -2,6 +2,7 @@ substitutions:
   name: zoutniveau
   friendly_name: Zoutniveau
   salt_distance: Afstand
+  salt_distance_tof: Afstand TOF
   salt_procent: Procent
   salt_level_animation: Animatie
   salt_height: Hoogte

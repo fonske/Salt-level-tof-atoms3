@@ -2,6 +2,7 @@ substitutions:
   name: saltlevel
   friendly_name: Saltlevel
   salt_distance: Distance
+  salt_distance_tof: Distance TOF
   salt_procent: Procent
   salt_level_animation: Animation
   salt_height: Height
