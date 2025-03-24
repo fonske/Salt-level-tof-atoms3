@@ -42,8 +42,12 @@ external_components:
 esp32:
   board: esp32-s3-devkitc-1
   framework:
-    type: arduino
-## type: esp-idf 
+    #type: arduino
+    type: esp-idf
+    version: recommended
+    # Custom sdkconfig options
+    sdkconfig_options:
+      COMPILER_OPTIMIZATION_SIZE: y
 
 wifi:
   ssid: !secret wifi_ssid
@@ -377,10 +381,10 @@ light:
     num_leds: 4
 #    brightness: 0.7
     # RMT 0 channels will be occupied by IR
-    rmt_channel: 1
+#    rmt_channel: 1
     chipset: ws2812
 #    restore_mode: ALWAYS_ON
-    internal: True
+    internal: true
 
 #G41=Button
 binary_sensor:
