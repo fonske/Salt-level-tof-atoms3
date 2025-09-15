@@ -1,7 +1,3 @@
-## Time-of-Flight Distance Unit (VL53L1X) M5stack  SKU: U172
-## Remark: I2C grove cable max 2 mtr
-## https://shop.m5stack.com/products/time-of-flight-distance-unit-vl53l1x
-
 substitutions:
   device_description: "Salt level detection with M5Stack AtomS3 lite and TOF vl53l1x sensor"
   timezone: "Europe/Amsterdam"
@@ -16,9 +12,7 @@ packages:
             esphome/labels/.salt-level-labels-nl.yaml,  
             #esphome/labels/.salt-level-labels-en.yaml, 
            ]
-## choices are: 
-## esphome/labels/.salt-level-labels-en.yaml, or 
-## esphome/labels/.salt-level-labels-nl.yaml,
+## choices are: esphome/labels/.salt-level-labels-en.yaml, or esphome/labels/.salt-level-labels-nl.yaml,
 
 ## for developing/testing, uncomment local includes and comment out remote_package part.
 #packages:
@@ -34,27 +28,21 @@ esphome:
     then:
       - script.execute: on_boot
 
-external_components:
-  - source: github://mrtoy-me/esphome-components-test@main
-    components: [ vl53l1x ]
-    refresh: 0s
-
 esp32:
   board: esp32-s3-devkitc-1
   framework:
     type: arduino
-## type: esp-idf 
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  #fast_connect: true
+  fast_connect: true
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${name}
     password: "configesp"
-    ap_timeout: 30s
+    ap_timeout: 15s
 
 captive_portal:
 
@@ -90,16 +78,19 @@ api:
             value: !lambda 'return last_distance_value;' 
 ota:
   platform: esphome
-  
+
 web_server:
   port: 80
+
+external_components:
+  - source: github://mrtoy-me/esphome-components-test@main
+    components: [ vl53l1x ]
+    refresh: 60s
 
 i2c:
   - id: bus_a
     sda: GPIO2
     scl: GPIO1
-    scan: false
-    frequency: 400kHz
 
 # Define a global variable for last regeneration time
 globals:
@@ -153,17 +144,17 @@ sensor:
   - platform: template
     id: last_distance_cm
     name: ${salt_distance}
-    icon: mdi:ruler
+    icon: mdi:water
     unit_of_measurement: cm
     accuracy_decimals: 1
     update_interval: never
 
-# VL53L1X TOF               
+# VL53L1X TOF
   - platform: vl53l1x
     i2c_id: bus_a
     address: 0x29
     distance_mode: short
-    update_interval: 30s
+    update_interval: 60s
     distance:
       # name: My Raw Distance # comment out if not needed in HA UI
       id: vl53l1x_raw_distance
@@ -172,9 +163,9 @@ sensor:
       id: vl53l1x_range_status
 
   - platform: template
-    name: ${salt_distance_tof}
     id: distance_cm
-    update_interval: 30s
+    name: ${salt_distance} TOF
+    update_interval: 60s
     unit_of_measurement: "cm"
     accuracy_decimals: 1
     device_class: distance
@@ -182,11 +173,11 @@ sensor:
     icon: mdi:ruler
     internal: false
     lambda: |-
-       if (id(vl53l1x_range_status).state > 0) {
-         return NAN;
-       } else {
-         return id(vl53l1x_raw_distance).state;
-       }
+      if (id(vl53l1x_range_status).state > 0) {
+       return NAN;
+      } else {
+       return id(vl53l1x_raw_distance).state;
+      }
     filters:
       - lambda: |-
           if (isnan(x)) {
@@ -197,16 +188,20 @@ sensor:
       - lambda: return x/10;
       - clamp:
           min_value: 0.0
-          max_value: 230.0
-      - delta: 0.2
+          max_value: 400.0
     on_value:
       then:
-        - sensor.template.publish:
-            id: salt_distance
-            state: !lambda |-
-              return id(distance_cm).state;
+        - if:
+            condition:
+              switch.is_on: salt_fill_switch
+            then:          
+            - sensor.template.publish:
+                id: salt_distance
+                state: !lambda |-
+                  return id(distance_cm).state;
 
-# ultrasonic distance sensor.
+
+# tof distance sensor.
   - platform: template
     name: salt_distance #${salt_distance}
     id:  salt_distance
@@ -237,7 +232,7 @@ sensor:
                   return id(last_distance);
             - script.execute: recalculate
       
-  # ultrasonic distance sensor calculate tank_percentage
+  # tof distance sensor calculate tank_percentage
   - platform: template
     id: salt_procent
     name: ${salt_procent}
@@ -357,8 +352,11 @@ text_sensor:
   # Expose WiFi information as sensor.
   - platform: wifi_info
     ip_address:
-      name: ${salt_ip}
-      icon: mdi:ip-network
+      name: ESP IP
+      icon: mdi:ip
+    ssid:
+      name: ESP SSID
+      icon: mdi:wifi
   
   # Textsensor "Fill Salt" yes or no.
   - platform: template
@@ -377,10 +375,10 @@ light:
     num_leds: 4
 #    brightness: 0.7
     # RMT 0 channels will be occupied by IR
-#    rmt_channel: 1
+    #rmt_channel: 1
     chipset: ws2812
 #    restore_mode: ALWAYS_ON
-    #internal: true
+    internal: True
 
 #G41=Button
 binary_sensor:
